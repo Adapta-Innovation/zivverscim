@@ -215,15 +215,11 @@ class ZivverSCIMConnection:
             },
             'userName': user_name
         }
-        print(scim_object_user)
 
         oauth_connection = OauthConnection(external_oauth_token_value=self.external_oauth_token_value)
         put_url = urllib.parse.urljoin(self.scim_api_update_url, account_id)
         response = oauth_connection.return_request_put_data(put_url=put_url, object_serialized=scim_object_user)
 
-        print(response)
-        print(put_url)
-        print(self.scim_api_update_url)
         self._check_response(response)
 
         zivver_user = get_zivver_user_object(response)
