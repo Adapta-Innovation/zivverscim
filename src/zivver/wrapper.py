@@ -33,7 +33,7 @@ def get_zivver_user_object(zivver_scim):
     
     zivver_scum_user = zivver_scim.get('urn:ietf:params:scim:schemas:zivver:0.1:User', '')
     zivver_scim_user_aliases = ''
-    zivver_scim_user_delegates = ''    
+    zivver_scim_user_delegates = ''
     if zivver_scum_user:
         zivver_scim_user_aliases = zivver_scim.get('aliases', [])
         zivver_scim_user_delegates = zivver_scim.get('delegates', [])
@@ -42,7 +42,7 @@ def get_zivver_user_object(zivver_scim):
                       meta_created_at=meta_created_at, meta_resource_type=meta_resource_type,
                       phone_numbers=phone_numbers, user_name=user_name, nick_name=nick_name, is_active=is_active,
                       schemas=schemas, enterprise_user=enterprise_user,
-                      zivver_scim_user_aliases=-zivver_scim_user_aliases,
+                      zivver_scim_user_aliases=zivver_scim_user_aliases,
                       zivver_scim_user_delegates=zivver_scim_user_delegates)
 
 

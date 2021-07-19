@@ -1,4 +1,4 @@
-from .exceptions import ZivverMissingRequiredFields
+from .exceptions import ZivverMissingRequiredFields, ZivverCRUDError
 from .external_connection import OauthConnection
 from .wrapper import get_zivver_user_object
 
@@ -40,6 +40,30 @@ class ZivverSCIMConnection:
         if sso_connection and not zivver_account_key:
             raise ZivverMissingRequiredFields('Missing field: zivver_account_key')
 
+    def _check_response(self, response):
+        """
+        Check the repsone for errors, raise if there are any errors.
+        """
+        try:
+            if response.status_code not in [200, 201, 202, 203, 204, 205, 206, 207, 208, 209, 210]:
+                raise ZivverCRUDError()
+        except ZivverCRUDError:
+            raise ZivverCRUDError('Connection failed, status code: {}'.format(response.status_code))
+        except Exception:
+            # Nothing here
+            pass
+
+        try:
+            errors = response.get('errors', None)
+            if errors:
+                raise ZivverCRUDError(errors)
+        except ZivverCRUDError:
+            errors = response.get('errors', None)
+            raise ZivverCRUDError(errors)
+        except Exception:
+            # Nothing here
+            pass
+
     def create_user_in_zivver(self, first_name=None, last_name=None, nick_name=None, user_name=None,
                               zivver_account_key=None, sso_connection=False, schemas=None, is_active=False):
         """
@@ -78,6 +102,8 @@ class ZivverSCIMConnection:
         oauth_connection = OauthConnection(external_oauth_token_value=self.external_oauth_token_value)
         result = oauth_connection.return_request_post_data(post_url=self.scim_api_create_url,
                                                            object_serialized=scim_object_user)
+
+        self._check_response(result)
 
         zivver_user = get_zivver_user_object(result)
         return zivver_user
