@@ -1,5 +1,3 @@
-import urllib.parse
-
 from .exceptions import ZivverMissingRequiredFields
 from .external_connection import OauthConnection
 from .wrapper import get_zivver_user_object
@@ -10,10 +8,9 @@ class ZivverSCIMConnection:
     Object representing the zivver connection to do CRUD operations with
     """
 
-    def __init__(self, external_oauth_token_value, scim_api_url, scim_api_create_url, scim_api_update_url,
+    def __init__(self, external_oauth_token_value, scim_api_create_url, scim_api_update_url,
                  scim_api_get_url, scim_api_delete_url):
         self.external_oauth_token_value = external_oauth_token_value
-        self.scim_api_url = scim_api_url
         self.scim_api_create_url = scim_api_create_url
         self.scim_api_update_url = scim_api_update_url
         self.scim_api_get_url = scim_api_get_url
@@ -24,8 +21,6 @@ class ZivverSCIMConnection:
         # Check for required fields
         if not self.external_oauth_token_value:
             raise ZivverMissingRequiredFields('Missing field: external_oauth_token_value')
-        if not self.scim_api_url:
-            raise ZivverMissingRequiredFields('Missing field: scim_api_url')
         if not self.scim_api_create_url:
             raise ZivverMissingRequiredFields('Missing field: scim_api_create_url')
         if not self.scim_api_update_url:
@@ -81,8 +76,7 @@ class ZivverSCIMConnection:
         }
 
         oauth_connection = OauthConnection(external_oauth_token_value=self.external_oauth_token_value)
-        zivver_create_user_url = urllib.parse.urljoin(self.scim_api_url, self.scim_api_create_url)
-        result = oauth_connection.return_request_post_data(post_url=zivver_create_user_url,
+        result = oauth_connection.return_request_post_data(post_url=self.scim_api_create_url,
                                                            object_serialized=scim_object_user)
 
         zivver_user = get_zivver_user_object(result)
