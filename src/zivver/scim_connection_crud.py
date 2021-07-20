@@ -88,7 +88,8 @@ class ZivverSCIMConnection:
             pass
 
     def create_user_in_zivver(self, first_name=None, last_name=None, nick_name=None, user_name=None,
-                              zivver_account_key=None, sso_connection=False, is_active=False):
+                              zivver_account_key=None, sso_connection=False, is_active=False, aliases=[],
+                              delegates=[]):
         """
         Create a user in Zivver via SCIM.
         :return: Returns the ZivverUser() object
@@ -116,6 +117,8 @@ class ZivverSCIMConnection:
             'nickName': nick_name,
             'urn:ietf:params:scim:schemas:zivver:0.1:User': {
                 'SsoAccountKey': zivver_account_key,
+                'aliases': aliases,
+                'delegates': delegates
             },
             'userName': user_name
         }
@@ -180,7 +183,8 @@ class ZivverSCIMConnection:
         return zivver_users
 
     def update_user_in_zivver(self, account_id, first_name=None, last_name=None, nick_name=None, user_name=None,
-                              zivver_account_key=None, sso_connection=False, is_active=False):
+                              zivver_account_key=None, sso_connection=False, is_active=False, aliases=[],
+                              delegates=[]):
         """
         Update a user in Zivver via SCIM.
         :return: Returns the ZivverUser() object
@@ -212,6 +216,8 @@ class ZivverSCIMConnection:
             'nickName': nick_name,
             'urn:ietf:params:scim:schemas:zivver:0.1:User': {
                 'SsoAccountKey': zivver_account_key,
+                'aliases': aliases,
+                'delegates': delegates
             },
             'userName': user_name
         }
