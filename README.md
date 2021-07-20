@@ -1,5 +1,6 @@
 # zivver
 Zivver Python pip module to CRUD accounts dynamically.
+This library enables the use of SCIM to talk to [Zivver](https://www.zivver.com)
 
 ## Requirements
 You will need to get the API key from Zivver to allow REST calls.
