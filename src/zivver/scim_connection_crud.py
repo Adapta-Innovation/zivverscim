@@ -18,7 +18,7 @@ class ZivverSCIMConnection:
         self.scim_api_get_url = scim_api_get_url
         self.scim_api_delete_url = scim_api_delete_url
 
-    def _check_required_create_fields(self, last_name=None, nick_name=None, user_name=None, sso_connection=None,
+    def _check_required_create_fields(self, last_name=None, user_name=None, sso_connection=None,
                                zivver_account_key=None):
         # Check for required fields
         if not self.external_oauth_token_value:
@@ -34,8 +34,6 @@ class ZivverSCIMConnection:
 
         if not last_name:
             raise ZivverMissingRequiredFields('Missing field: last_name')
-        if not nick_name:
-            raise ZivverMissingRequiredFields('Missing field: nick_name')
         if not user_name:
             raise ZivverMissingRequiredFields('Missing field: user_name')
 
@@ -94,8 +92,8 @@ class ZivverSCIMConnection:
         Create a user in Zivver via SCIM.
         :return: Returns the ZivverUser() object
         """
-        self._check_required_create_fields(last_name=last_name, nick_name=nick_name, user_name=user_name,
-                                           sso_connection=sso_connection, zivver_account_key=zivver_account_key)
+        self._check_required_create_fields(last_name=last_name, user_name=user_name, sso_connection=sso_connection,
+                                           zivver_account_key=zivver_account_key)
 
         # Set defaults
         if not first_name:
@@ -189,8 +187,8 @@ class ZivverSCIMConnection:
         Update a user in Zivver via SCIM.
         :return: Returns the ZivverUser() object
         """
-        self._check_required_create_fields(last_name=last_name, nick_name=nick_name, user_name=user_name,
-                                           sso_connection=sso_connection, zivver_account_key=zivver_account_key)
+        self._check_required_create_fields(last_name=last_name, user_name=user_name, sso_connection=sso_connection,
+                                           zivver_account_key=zivver_account_key)
 
         self._check_required_delete_get_fields(account_id)
 
