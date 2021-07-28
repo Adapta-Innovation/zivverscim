@@ -18,6 +18,22 @@ or follow these steps:
 3. Endpoint URLs to Zivver for CRUD actions.
    * Example endpoint: https://app.zivver.com/api/scim/v2/Users
     
+## Install
+
+Clone this repo and install build:
+
+    $: git clone git@github.com:Adapta-dev/zivver.git
+    $: cd zivver
+    $: pip install --upgrade build
+    
+build the module:
+
+    $: python -m build
+
+Install the module:
+
+    $: pip install --upgrade ./zivver/dist/Zivver-0.5.0.tar.gz
+
 
 ## Create account
 Before you do anything in Python with Zivver, you will need to import the Zivver library:
