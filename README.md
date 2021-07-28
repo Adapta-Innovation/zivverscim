@@ -20,25 +20,29 @@ or follow these steps:
     
 
 ## Create account
-Before you do anything in Python with Zivver, you will need to 
+Before you do anything in Python with Zivver, you will need to import the Zivver library:
+
+    from zivver import scim_connection_crud
+    ...
+
 create a new Zivver Connection Object:
 
     zivver_scim_connection = scim_connection_crud.ZivverSCIMConnection(
         external_oauth_token_value=self.external_oauth_token.token_value,  # Generated API key
-        scim_api_create_url=self.zivver_config.create_user_url,            # Endpoint URL from Zivver
-        scim_api_update_url=self.zivver_config.update_user_url,            # Endpoint URL from Zivver
-        scim_api_get_url=self.zivver_config.get_user_url,                  # Endpoint URL from Zivver
-        scim_api_delete_url=self.zivver_config.delete_user_url             # Endpoint URL from Zivver
+        scim_api_create_url='https://app.zivver.com/api/scim/v2/Users/,     # Endpoint URL from Zivver
+        scim_api_update_url='https://app.zivver.com/api/scim/v2/Users/,     # Endpoint URL from Zivver
+        scim_api_get_url='https://app.zivver.com/api/scim/v2/Users/,        # Endpoint URL from Zivver
+        scim_api_delete_url='https://app.zivver.com/api/scim/v2/Users/,     # Endpoint URL from Zivver
     )
 
 You can use the `zivver_scim_connection` object to create new accounts:
 
     zivver_user_object = zivver_scim_connection.create_user_in_zivver(
-        first_name=self.first_name,
-        last_name=self.last_name,
-        nick_name='{} {}'.format(self.first_name, self.last_name),
-        user_name=self.primary_email,
-        zivver_account_key=self.primary_email,
+        first_name='John',
+        last_name='Doe',
+        nick_name='{} {}'.format('John', 'Doe'),
+        user_name='john@gmail.com',
+        zivver_account_key='john@gmail.com',
         sso_connection=True,                                            # Only if SSO is enabled
         is_active=True                                                  # If the user should be active upon creation
     )
@@ -49,37 +53,38 @@ You can also use `aliases` and `delegates` attributes to append those:
 
     zivver_user_object = zivver_scim_connection.create_user_in_zivver(
         ...
-        aliases=[self.alias],               # Alias for current user
-        delegates=[user.primary_email]      # Delegate access for other users
+        aliases=['john.doe@gmail.com'],               # Alias for current user
+        delegates=['manager@gmail.com']               # Delegate access for other users
     }
 
 ## Reference
 Create accounts:
 
     zivver_user_object = zivver_scim_connection.create_user_in_zivver(
-        first_name=self.first_name,
-        last_name=self.last_name,
-        nick_name='{} {}'.format(self.first_name, self.last_name),
-        user_name=self.primary_email,
-        zivver_account_key=self.primary_email,
-        sso_connection=True,                                            # Only if SSO is enabled
-        is_active=True,                                                 # If the user should be active upon creation
-        aliases=[self.alias],               # Alias for current user
-        delegates=[user.primary_email]      # Delegate access for other users    
+        first_name='John',
+        last_name='Doe',
+        nick_name='{} {}'.format('John', 'Doe'),
+        user_name='john@gmail.com',
+        zivver_account_key='john@gmail.com',
+        sso_connection=True,                    # Only if SSO is enabled
+        is_active=True,                         # If the user should be active upon creation
+        aliases=['john.doe@gmail.com'],         # Alias for current user
+        delegates=['manager@gmail.com'          # Delegate access for other users    
     )
 
 Update accounts:
 
-    zivver_user_object = zivver_scim_connection.create_user_in_zivver(
-        first_name=self.first_name,
-        last_name=self.last_name,
-        nick_name='{} {}'.format(self.first_name, self.last_name),
-        user_name=self.primary_email,
-        zivver_account_key=self.primary_email,
-        sso_connection=True,                                            # Only if SSO is enabled
-        is_active=True,                                                 # If the user should be active upon creation
-        aliases=[self.alias],               # Alias for current user
-        delegates=[user.primary_email]      # Delegate access for other users
+    zivver_user_object = zivver_scim_connection.update_user_in_zivver(
+        account_id='12412412-4124124124-12412412412-124124412241'
+        first_name='John',
+        last_name='Doe',
+        nick_name='{} {}'.format('John', 'Doe'),
+        user_name='john@gmail.com',
+        zivver_account_key='john@gmail.com',
+        sso_connection=True,                    # Only if SSO is enabled
+        is_active=True,                         # If the user should be active upon creation
+        aliases=['john.doe@gmail.com'],         # Alias for current user
+        delegates=['manager@gmail.com'          # Delegate access for other users    
     )
 
 Get one account:
