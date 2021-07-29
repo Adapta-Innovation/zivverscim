@@ -53,37 +53,8 @@ class ZivverSCIMConnection:
         """
         Check the repsone for errors, raise if there are any errors.
         """
-        try:
-            if response.status_code not in [200, 201, 202, 203, 204, 205, 206, 207, 208, 209, 210]:
-                raise ZivverCRUDError()
-        except ZivverCRUDError:
-            raise ZivverCRUDError('Connection failed, status code: {}'.format(response.status_code))
-        except Exception:
-            # Nothing here
-            pass
-
-        try:
-            errors = response.get('errors', None)
-            if errors:
-                raise ZivverCRUDError()
-        except ZivverCRUDError:
-            errors = response.get('errors', None)
-            raise ZivverCRUDError(errors)
-        except Exception:
-            # Nothing here
-            pass
-
-        try:
-            code = response.get('code', None)
-            if code:
-                raise ZivverCRUDError()
-        except ZivverCRUDError:
-            code = response.get('code', None)
-            message = response.get('message', None)
-            raise ZivverCRUDError('Failed: {} --> {}'.format(code, message))
-        except Exception:
-            # Nothing here
-            pass
+        if type(response) is not dict and response.status_code in [400]:
+            raise ZivverCRUDError(message='Response from Zivver with Errors', response=response)
 
     def create_user_in_zivver(self, first_name=None, last_name=None, nick_name=None, user_name=None,
                               zivver_account_key=None, sso_connection=False, is_active=False, aliases=[],
