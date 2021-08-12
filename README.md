@@ -19,20 +19,9 @@ or follow these steps:
    * Example endpoint: https://app.zivver.com/api/scim/v2/Users
     
 ## Install
-Clone this repo and install build:
+Install via pip
 
-    $: git clone git@github.com:Adapta-dev/zivver.git
-    $: cd zivverscim
-    $: pip install --upgrade build
-    
-build the module:
-
-    $: python -m build
-
-Install the module:
-
-    $: pip install --upgrade ./zivverscim/dist/Zivverscim-0.5.0.tar.gz
-
+    $: pip install zivverscim
 
 ## Testing
 You should create an `.env` file, we already have added the `.env.dummy` file that you need to rename to `.env`.
