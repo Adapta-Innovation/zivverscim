@@ -54,7 +54,7 @@ jobs:
       uses: Adapta-dev/google-chat-notification@releases/v1
       with:
         name: ZIVVER SCIM Deployment!!1
-        url: ${{ env.TOKEN }}
-        status: ${{ job.GOOGLE_CHAT_WEBHOOK }}
+        url: ${{ env.GOOGLE_CHAT_WEBHOOK }}
+        status: ${{ job.status }}
       if: always()
 
