@@ -31,12 +31,12 @@ def get_zivver_user_object(zivver_scim):
     schemas = zivver_scim.get('schemas', [])
     enterprise_user = zivver_scim.get('urn:ietf:params:scim:schemas:extension:enterprise:2.0:User', '')
     
-    zivver_scum_user = zivver_scim.get('urn:ietf:params:scim:schemas:zivver:0.1:User', '')
+    zivver_scim_user = zivver_scim.get('urn:ietf:params:scim:schemas:zivver:0.1:User', '')
     zivver_scim_user_aliases = ''
     zivver_scim_user_delegates = ''
-    if zivver_scum_user:
-        zivver_scim_user_aliases = zivver_scum_user.get('aliases', [])
-        zivver_scim_user_delegates = zivver_scum_user.get('delegates', [])
+    if zivver_scim_user:
+        zivver_scim_user_aliases = zivver_scim_user.get('aliases', [])
+        zivver_scim_user_delegates = zivver_scim_user.get('delegates', [])
     
     return ZivverUser(account_id=account_id, name_formatted=name_formatted, meta_location=meta_location,
                       meta_created_at=meta_created_at, meta_resource_type=meta_resource_type,

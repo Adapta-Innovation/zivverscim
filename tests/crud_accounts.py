@@ -2,8 +2,8 @@ import unittest
 
 from config import ZivverConfig
 
-from zivver import scim_connection_crud
-from zivver.exceptions import ZivverCRUDError
+from zivverscim import scim_connection_crud
+from zivverscim.exceptions import ZivverCRUDError
 
 import logging
 
