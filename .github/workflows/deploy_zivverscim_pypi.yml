@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: CI
+name: Deploy zivverscim to pypi
 
 # Controls when the workflow will run
 on:
@@ -14,7 +14,8 @@ on:
 env:
   TOKEN_USERNAME: ${{ secrets.PROD_PYPI_USERNAME_TOKEN }}
   TOKEN: ${{ secrets.PROD_PYPI_TOKEN }}
-  
+  GOOGLE_CHAT_WEBHOOK: ${{ secrets.GOOGLE_CHAT_WEBHOOK }}
+
 jobs:
   setup-build-publish-deploy:
     name: Setup, Build and Publish
@@ -38,13 +39,22 @@ jobs:
         python3 -m pip install setuptools wheel twine
         # If requirements.txt exists, install from it
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+
+    # Build and upload to PyPI
+    - name: "Builds and uploads to PyPI"
+      run: |
         # Build the package
         python3 -m build
-        # Install the package
-        python3 -m pip install -e .
-        
-    # Tests with unittest
-    - name: Test with unittest
-      run: |
-        python3 -m tests/crud_accounts.py
-      
+        python3 -m twine upload dist/*
+      env:
+        TWINE_USERNAME: ${{ env.TOKEN_USERNAME }}
+        TWINE_PASSWORD: ${{ env.TOKEN }}
+          
+    - name: Google Chat Deployment Notification
+      uses: Adapta-dev/google-chat-notification@releases/v1
+      with:
+        name: ZIVVER SCIM Deployment!!1
+        url: ${{ env.TOKEN }}
+        status: ${{ job.GOOGLE_CHAT_WEBHOOK }}
+      if: always()
+
