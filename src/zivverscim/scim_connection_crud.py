@@ -53,7 +53,7 @@ class ZivverSCIMConnection:
         """
         Check the repsone for errors, raise if there are any errors.
         """
-        if type(response) is not dict and response.status_code in [400]:
+        if type(response) is not dict and response.status_code in [400, 401, 403, 404]:
             raise ZivverCRUDError(message='Response from Zivver with Errors', response=response)
 
     def create_user_in_zivver(self, first_name=None, last_name=None, nick_name=None, user_name=None,
