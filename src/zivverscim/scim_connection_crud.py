@@ -1,6 +1,6 @@
 import urllib.parse
 
-from .exceptions import ZivverMissingRequiredFields, ZivverCRUDError
+from .exceptions import ZivverMissingRequiredFields, ZivverCRUDError, ZivverTooManyRequests
 from .external_connection import OauthConnection
 from .wrapper import get_zivver_user_object
 
@@ -55,6 +55,8 @@ class ZivverSCIMConnection:
         """
         if type(response) is not dict and response.status_code in [400, 401, 403, 404]:
             raise ZivverCRUDError(message='Response from Zivver with Errors', response=response)
+        if type(response) is not dict and response.status_code in [429]:
+            raise ZivverTooManyRequests('Zivver can only process soo much, retry the request!')
 
     def create_user_in_zivver(self, first_name=None, last_name=None, nick_name=None, user_name=None,
                               zivver_account_key=None, sso_connection=False, is_active=False, aliases=[],

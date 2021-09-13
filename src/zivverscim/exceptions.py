@@ -3,6 +3,11 @@ class ZivverMissingRequiredFields(Exception):
     pass
 
 
+class ZivverTooManyRequests(Exception):
+    """When there are too many requests to the Zivver servers"""
+    pass
+
+
 class ZivverCRUDError(Exception):
     """When there are erros in the response"""
 
