@@ -1,3 +1,4 @@
+import threading
 import unittest
 
 from config import ZivverConfig
@@ -6,6 +7,7 @@ from zivverscim import scim_connection_crud
 from zivverscim.exceptions import ZivverCRUDError
 
 import logging
+
 
 class TestCRUDAccounts(unittest.TestCase):
 
@@ -38,6 +40,66 @@ class TestCRUDAccounts(unittest.TestCase):
                 # Delete this Zivver user
                 logging.info('Cleanup existing user from Zivver')
                 self.zivver_scim_connection.delete_user_from_zivver(account_id=zivver_user.account_id)
+
+    def _test_creation_and_deletion_of_two_hundred_zivver_users(self, account_index, account_max_index):
+        """
+        Submethod for the test_creation_and_deletion_of_two_hundred_zivver_users
+        # 1. Remove 200 accounts if they exist.
+        # 2. Create 200 accounts.
+        # 3. Check if there are 200 accounts created.
+        # 4. Remove all 200 accounts.
+        # 5. Check if all 200 accounts are removed
+        """
+        # 1. Remove 200 accounts if they exist.
+        for index in range(account_index, account_max_index):
+            account_to_create_email = '{}-{}@{}'.format(index, 'john.doe', ZivverConfig.zivver_test_domain)
+            self._cleanup_user(zivver_user_username=account_to_create_email)
+
+        # 2. Create 200 accounts.
+        created_zivver_account_ids = {}
+        for index in range(account_index, account_max_index):
+            account_to_create_email = '{}-{}@{}'.format(index, 'john.doe', ZivverConfig.zivver_test_domain)
+            logging.debug('Create account')
+            zivver_user_object = self.zivver_scim_connection.create_user_in_zivver(
+                first_name='{}-john'.format(index),
+                last_name='doe',
+                nick_name='',
+                user_name=account_to_create_email,
+                zivver_account_key=account_to_create_email,
+                sso_connection=True,
+                is_active=True
+            )
+            created_zivver_account_ids[account_to_create_email] = zivver_user_object.account_id
+
+        # 3. Check if there are 200 accounts created.
+        for index in range(account_index, account_max_index):
+            account_to_create_email = '{}-{}@{}'.format(index, 'john.doe', ZivverConfig.zivver_test_domain)
+            zivver_existing_user = self.zivver_scim_connection.get_user_from_zivver(
+                account_id=created_zivver_account_ids[account_to_create_email]
+            )
+            self.assertEqual(zivver_existing_user.account_id, created_zivver_account_ids[account_to_create_email])
+
+        # 4. Remove all 200 accounts.
+        for index in range(account_index, account_max_index):
+            account_to_create_email = '{}-{}@{}'.format(index, 'john.doe', ZivverConfig.zivver_test_domain)
+            self.zivver_scim_connection.delete_user_from_zivver(
+                account_id=created_zivver_account_ids[account_to_create_email]
+            )
+
+        # 5. Check if all 200 accounts are removed
+        for index in range(account_index, account_max_index):
+            account_to_create_email = '{}-{}@{}'.format(index, 'john.doe', ZivverConfig.zivver_test_domain)
+            try:
+                logging.info('Test to see if the account is deleted')
+                zivver_user_object = self.zivver_scim_connection.get_user_from_zivver(
+                    account_id=created_zivver_account_ids[account_to_create_email]
+                )
+                self.assertEqual(False, True)  # Account is not deleted, should fail the test
+            except ZivverCRUDError as z_e:
+                # Log error message, account does not exist
+                logging.info(z_e.get_error_message())
+                logging.info(z_e.get_sollution())
+                self.assertEqual(True, True)  # Account is deleted, should pass the test
 
     def test_create_and_update_and_delete_account_in_zivver(self):
         """
@@ -154,7 +216,6 @@ class TestCRUDAccounts(unittest.TestCase):
                 # 5. Test that the seccond time the account is not created
                 logging.debug(z_e.get_error_message())
                 logging.debug(z_e.get_sollution())
-
 
     def test_alias_and_delegates(self):
         """
@@ -462,6 +523,39 @@ class TestCRUDAccounts(unittest.TestCase):
             account_id=zivver_delegator_user_object.account_id
         )
         self.assertEqual(len(zivver_delegator_user_object.zivver_scim_user_delegates), 0)
+
+    def test_creation_and_deletion_of_two_hundred_zivver_users(self):
+        """
+        # 1. Remove 200 accounts if they exist.
+        # 2. Create 200 accounts.
+        # 3. Check if there are 200 accounts created.
+        # 4. Remove all 200 accounts.
+        # 5. Check if all 200 accounts are removed
+        """
+        self._invoke_setup('test_creation_and_deletion_of_two_hundred_zivver_users')
+
+        thread_1 = threading.Thread(
+            target=self._test_creation_and_deletion_of_two_hundred_zivver_users, args=(1, 50), daemon=True
+        )
+        thread_2 = threading.Thread(
+            target=self._test_creation_and_deletion_of_two_hundred_zivver_users, args=(51, 100), daemon=True
+        )
+        thread_3 = threading.Thread(
+            target=self._test_creation_and_deletion_of_two_hundred_zivver_users, args=(101, 150), daemon=True
+        )
+        thread_4 = threading.Thread(
+            target=self._test_creation_and_deletion_of_two_hundred_zivver_users, args=(151, 200), daemon=True
+        )
+
+        thread_1.start()
+        thread_2.start()
+        thread_3.start()
+        thread_4.start()
+
+        thread_1.join()
+        thread_2.join()
+        thread_3.join()
+        thread_4.join()
 
 
 if __name__ == '__main__':

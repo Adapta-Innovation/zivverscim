@@ -55,7 +55,7 @@ class ZivverSCIMConnection:
         """
         if type(response) is not dict and response.status_code in [400, 401, 403, 404]:
             raise ZivverCRUDError(message='Response from Zivver with Errors', response=response)
-        if type(response) is not dict and response.status_code in [429]:
+        if type(response) is dict and response.get('code', 0) in [429]:
             raise ZivverTooManyRequests('Zivver can only process soo much, retry the request!')
 
     def create_user_in_zivver(self, first_name=None, last_name=None, nick_name=None, user_name=None,
