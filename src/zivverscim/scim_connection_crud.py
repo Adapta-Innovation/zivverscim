@@ -49,7 +49,7 @@ class ZivverSCIMConnection:
         if not account_id:
             raise ZivverMissingRequiredFields('Missing field: account_id')
 
-    def _check_response(self, response):
+    def _check_response(self, response, check_for_resources=False):
         """
         Check the repsone for errors, raise if there are any errors.
         """
@@ -57,7 +57,7 @@ class ZivverSCIMConnection:
             raise ZivverCRUDError(message='Response from Zivver with Errors', response=response)
         if type(response) is dict and response.get('code', 0) in [429]:
             raise ZivverTooManyRequests('Zivver can only process soo much, retry the request!')
-        if type(response) is dict and response.get('Resources', None) is None:
+        if check_for_resources is True and type(response) is dict and response.get('Resources', None) is None:
             raise ZivverCRUDError(message='Response from Zivver with Errors', response=response)
 
     def create_user_in_zivver(self, first_name=None, last_name=None, nick_name=None, user_name=None,
@@ -147,7 +147,7 @@ class ZivverSCIMConnection:
         oauth_connection = OauthConnection(external_oauth_token_value=self.external_oauth_token_value)
         response = oauth_connection.return_request_get_data(get_url=self.scim_api_get_url)
 
-        self._check_response(response)
+        self._check_response(response=response, check_for_resources=True)
 
         zivver_users = []
         for zivver_scim_user in response['Resources']:
