@@ -19,7 +19,7 @@ class ZivverSCIMConnection:
         self.scim_api_delete_url = scim_api_delete_url
 
     def _check_required_create_fields(self, last_name=None, user_name=None, sso_connection=None,
-                               zivver_account_key=None):
+                                      zivver_account_key=None):
         # Check for required fields
         if not self.external_oauth_token_value:
             raise ZivverMissingRequiredFields('Missing field: external_oauth_token_value')
@@ -57,6 +57,8 @@ class ZivverSCIMConnection:
             raise ZivverCRUDError(message='Response from Zivver with Errors', response=response)
         if type(response) is dict and response.get('code', 0) in [429]:
             raise ZivverTooManyRequests('Zivver can only process soo much, retry the request!')
+        if type(response) is dict and response.get('Resources', 0) is None:
+            raise ZivverCRUDError(message='Response from Zivver with Errors', response=response)
 
     def create_user_in_zivver(self, first_name=None, last_name=None, nick_name=None, user_name=None,
                               zivver_account_key=None, sso_connection=False, is_active=False, aliases=[],
