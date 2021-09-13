@@ -57,7 +57,7 @@ class ZivverSCIMConnection:
             raise ZivverCRUDError(message='Response from Zivver with Errors', response=response)
         if type(response) is dict and response.get('code', 0) in [429]:
             raise ZivverTooManyRequests('Zivver can only process soo much, retry the request!')
-        if type(response) is dict and response.get('Resources', 0) is None:
+        if type(response) is dict and response.get('Resources', None) is None:
             raise ZivverCRUDError(message='Response from Zivver with Errors', response=response)
 
     def create_user_in_zivver(self, first_name=None, last_name=None, nick_name=None, user_name=None,
