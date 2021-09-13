@@ -19,9 +19,21 @@ class ZivverCRUDError(Exception):
         super().__init__(message, code, params)
 
         self.response = response
-        self.status_code = response.status_code
-        self.reason = response.reason
-        self.text = response.text
+
+        try:
+            self.status_code = response.status_code
+        except AttributeError as ae:
+            self.status_code = 'NO STATUS_CODE'
+
+        try:
+            self.reason = response.reason
+        except AttributeError as ae:
+            self.reason = 'NO REASON'
+
+        try:
+            self.text = response.text
+        except AttributeError as ae:
+            self.text = 'NO TEXT'
 
     def get_error_message(self):
         """
