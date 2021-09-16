@@ -29,7 +29,7 @@ Update the enviroment variables inside that file.
 
 Clone this repo and install requirements:
 
-    $: git clone git@github.com:Adapta-dev/zivverscim.git
+    $: git clone git@github.com:Adapta-Innovation/zivverscim.git
     $: cd zivverscim
     $: pip install -r requirements.txt
 
