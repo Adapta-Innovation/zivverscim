@@ -23,10 +23,10 @@ jobs:
 
     steps:
     - name: Checkout
-      uses: Adapta-dev/checkout@v2
+      uses: Adapta-Innovation/checkout@v2
 
     # Sets up python3
-    - uses:  Adapta-dev/setup-python@v2
+    - uses:  Adapta-Innovation/setup-python@v2
       with:
         python-version: 3.8
         
@@ -51,7 +51,7 @@ jobs:
         TWINE_PASSWORD: ${{ env.TOKEN }}
           
     - name: Google Chat Deployment Notification
-      uses: Adapta-dev/google-chat-notification@releases/v1
+      uses: Adapta-Innovation/google-chat-notification@releases/v1
       with:
         name: ZIVVER SCIM Deployment!!1
         url: ${{ env.GOOGLE_CHAT_WEBHOOK }}
